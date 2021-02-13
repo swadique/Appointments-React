@@ -9,6 +9,7 @@ import {
 import { ConfigProvider, Empty } from "antd";
 import GlobalStyle from "./globalStyle";
 import Register from "./modules/register";
+import Home from "./modules/home";
 
 function App() {
   return (
@@ -18,9 +19,8 @@ function App() {
         <Router>
           <Switch>
             <Route path="/register" component={Register} />
-            <Route path="/signup" render={(props) => <></>} />
-            <Route path="/home" render={(props) => <></>} />
-            <Redirect to="/login" />
+            <Route path="/home" render={(props) => <Home></Home>} />
+            <Redirect to="/register" />
           </Switch>
         </Router>
       </ConfigProvider>

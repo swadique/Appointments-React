@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Row, Col } from "antd";
-import { Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Login from "./login.jsx";
 import Signup from "./signup.jsx";
 
@@ -25,8 +25,11 @@ const Register = ({ match }) => {
     <Wrapper>
       <Row justify="center" className="max-height" align="middle">
         <Col span={{ sm: 24, md: 24, lg: 12, xl: 12 }}>
-          <Route path={`${match.url}/login`} render={() => <Login />} />
-          <Route path={`${match.url}/signup`} render={() => <Signup />} />
+          <Switch>
+            <Route path={`${match.url}/login`} render={() => <Login />} />
+            <Route path={`${match.url}/signup`} render={() => <Signup />} />
+            <Redirect to={`${match.url}/login`} />
+          </Switch>
         </Col>
       </Row>
     </Wrapper>

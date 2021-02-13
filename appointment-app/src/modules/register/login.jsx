@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, Input, Button, Row, Col } from "antd";
+import { Form, Input, Button, Row, Col, message } from "antd";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
+import ApiCalls from "../../apis/ApiCalls";
+import storage from "../../storage";
 
-const Login = () => {
-  const [form] = Form.useForm();
+const Login = ({history,match}) => {
   const Wrapper = styled(Form.Item)`
     border-collapse: collapse;
     input {
@@ -39,7 +40,23 @@ const Login = () => {
     }
   `;
 
-  const onFinish = (values) => {};
+  const [form] = Form.useForm();
+
+  const onFinish = (formValues) => {
+    ApiCalls.login(formValues)
+      .then((res) => {
+        console.log(res);
+        storage.authToken.setItem(res.authToken);
+        storage.user.setItem(res);
+        history.push('/home')
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          message.error(error.response.data);
+        }
+      });
+  };
 
   return (
     <Wrapper>
@@ -129,4 +146,4 @@ const Login = () => {
     </Wrapper>
   );
 };
-export default Login;
+export default withRouter(Login);

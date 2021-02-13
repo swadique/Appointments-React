@@ -1,7 +1,8 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+import { Form, Input, Button, Checkbox, Row, Col, message } from "antd";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import ApiCalls from "../../apis/ApiCalls";
 
 const Signup = () => {
   const [form] = Form.useForm();
@@ -38,7 +39,19 @@ const Signup = () => {
     }
   `;
 
-  const onFinish = (values) => {};
+  const onFinish = (formValues) => {
+    const { confirm, acceptCheckbox, ...rest } = formValues;
+    const payload = { ...rest, userType: "seller" };
+    ApiCalls.signup(payload).then((res) => {
+      message.success(res)
+      console.log(res);
+    }).catch(error=>{
+      if(error.response){
+        console.log(error.response.data);
+        message.error(error.response.data)
+      }
+    });
+  };
 
   return (
     <Wrapper>
