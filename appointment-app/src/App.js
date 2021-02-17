@@ -9,7 +9,7 @@ import {
 import { ConfigProvider, Empty } from "antd";
 import GlobalStyle from "./globalStyle";
 import Register from "./modules/register";
-import Home from "./modules/home";
+import Home from "./modules/home/index";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
         <Router>
           <Switch>
             <Route path="/register" component={Register} />
-            <Route path="/home" render={(props) => <Home></Home>} />
+            <Route path="/home" component={Home} />
             <Redirect to="/register" />
           </Switch>
         </Router>

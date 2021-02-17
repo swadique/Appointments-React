@@ -15,5 +15,18 @@ class ApiCalls {
       data: payload,
     }).then((response) => response.data);
   }
+  static getUserProfile() {
+    return axiosInterceptor({
+      url: "/user",
+      method: "GET",
+    }).then((response) => response.data);
+  }
+  static saveTimeSlots(payload) {
+    return axiosInterceptor({
+      url: "user/my-slots",
+      data: payload,
+      method: "POST",
+    }).then((response) => response.data);
+  }
 }
 export default ApiCalls;

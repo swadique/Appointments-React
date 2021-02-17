@@ -5,7 +5,7 @@ const serverAddress = process.env.REACT_APP_SERVER_ADDRESS;
 
 const axiosInterceptor = axios.create({
   headers: {
-    Authorization: storage.authToken.getItem(),
+    Authorization: `Bearer ${storage.authToken.getItem()}`,
   },
   baseURL: `${serverAddress}`,
 });
