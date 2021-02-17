@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TimePicker,
@@ -6,9 +6,9 @@ import {
   Button,
   Col,
   Row,
-  Input,
   message,
   InputNumber,
+  Typography
 } from "antd";
 import days from "../../constants/days";
 import styled from "styled-components";
@@ -24,8 +24,10 @@ function TimeSlots() {
     }
   `;
   const [timeSlots, setTimeSlots] = useState(days);
+  const [isAllSlotsActive, setIsAllSlotsActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [validated, setValidated] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
+
   function timeHandler(e, record) {
     try {
       setTimeSlots((oldSlot) => {
@@ -83,20 +85,39 @@ function TimeSlots() {
     console.log(e, record);
   }
   async function handleSubmit() {
-    const result = await timeSlots.forEach((item) => {
-      if (item.status === "enabled") {
-        if (!item.startTime || !item.endTime || !item.duration) {
-          message.error(`The values for ${item.day} not found`);
-          setValidated(false);
+    setButtonLoading(true);
+    new Promise((response, reject) => {
+      timeSlots.forEach((item) => {
+        if (item.status === "enabled") {
+          if (!item.startTime || !item.endTime || !item.duration) {
+            reject(`The values for ${item.day} is missing`);
+          }
         }
-      }
-    });
-    setValidated(true)
-    if (validated) {
-      ApiCalls.saveTimeSlots({timeSlots:timeSlots}).then((res) => {
-        console.log(res);
       });
-    }
+      response(true);
+    })
+      .then((res) => {
+        if (res) {
+          ApiCalls.saveTimeSlots({ timeSlots: timeSlots, isAllSlotsActive })
+            .then((res) => {
+              setButtonLoading(false);
+              message.success("Slots Updated");
+              console.log(res);
+            })
+            .catch((e) => {
+              console.log(e);
+              if (e.response) {
+                message.error(e.response.data);
+              } else {
+                message.error("Something went wrong");
+              }
+            });
+        }
+      })
+      .catch((error) => {
+        message.error(error);
+        setButtonLoading(false);
+      });
   }
   useEffect(() => {
     setLoading(true);
@@ -104,10 +125,12 @@ function TimeSlots() {
       .then((res) => {
         setLoading(false);
         setTimeSlots(res.timeSlots);
+        setIsAllSlotsActive(res.isAllSlotsActive);
       })
       .catch((e) => {
         if (e.response) {
           message.error(e.response.message);
+          setLoading(false);
         }
       });
   }, []);
@@ -118,13 +141,21 @@ function TimeSlots() {
         dataSource={timeSlots}
         pagination={{ position: ["none", "none"] }}
         loading={loading}
+        tableLayout="fixed"
         title={() => (
           <Row justify="space-between" align="middle" gutter={24}>
             <Col>
-              <h3>Available times</h3>
+              <Typography.Title level={3} type="secondary">
+                Available times
+              </Typography.Title>
             </Col>
             <Col>
-              <Switch checkedChildren="Enabled" unCheckedChildren="Disabled" />
+              <Switch
+                checkedChildren="Enabled"
+                unCheckedChildren="Disabled"
+                checked={isAllSlotsActive}
+                onChange={(value) => setIsAllSlotsActive(value)}
+              />
             </Col>
           </Row>
         )}
@@ -136,6 +167,7 @@ function TimeSlots() {
                 type="primary"
                 size="large"
                 onClick={handleSubmit}
+                loading={buttonLoading}
               >
                 Save
               </Button>
@@ -161,7 +193,7 @@ function TimeSlots() {
                 record.endTime ? moment(record.endTime, "HH:mm") : undefined,
               ]}
               clearIcon={false}
-              disabled={record.status === "disabled"}
+              disabled={!isAllSlotsActive ? true : record.status === "disabled"}
             />
           )}
         />
@@ -173,7 +205,7 @@ function TimeSlots() {
             <InputNumber
               placeholder="duration"
               onChange={(e) => debouncedDurationHandler(e, record)}
-              disabled={record.status === "disabled"}
+              disabled={!isAllSlotsActive ? true : record.status === "disabled"}
               value={record.duration}
             />
           )}
@@ -186,6 +218,7 @@ function TimeSlots() {
             <Switch
               onChange={(e) => statusHandler(e, record)}
               checked={item === "enabled"}
+              disabled={!isAllSlotsActive}
             />
           )}
         />

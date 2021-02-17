@@ -5,7 +5,7 @@ const API_SERVER = process.env.REACT_APP_SERVER_ADDRESS;
 
 const ProfileAvatar = ({ url, icon, size, style }) => {
   return url ? (
-    <Avatar src={`${API_SERVER}/api/public/${url}`} size={size} style={style} />
+    <Avatar src={`${API_SERVER}/public/${url}`} size={size} style={style} />
   ) : (
     <Avatar icon={<UserOutlined />} size={size} style={style} />
   );

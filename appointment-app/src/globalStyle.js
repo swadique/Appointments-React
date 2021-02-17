@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
 font-family: Montserrat;
@@ -17,5 +17,6 @@ th{
     border-radius:16px 16px 16px 16px;
 }
 
-`
-export default GlobalStyle
+
+`;
+export default GlobalStyle;

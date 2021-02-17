@@ -23,9 +23,33 @@ class ApiCalls {
   }
   static saveTimeSlots(payload) {
     return axiosInterceptor({
-      url: "user/my-slots",
+      url: "/user/my-slots",
       data: payload,
       method: "POST",
+    }).then((response) => response.data);
+  }
+  static updateProfilePicture(model) {
+    return axiosInterceptor({
+      url: "/user/profile-pic",
+      method: "PATCH",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: model,
+    }).then((response) => response.data);
+  }
+  static updateProfile(model) {
+    return axiosInterceptor({
+      url: "/user",
+      method: "POST",
+      data: model,
+    }).then((response) => response.data);
+  }
+  static getAppointments(params) {
+    return axiosInterceptor({
+      url: "/appointment",
+      method: "GET",
+      params: params,
     }).then((response) => response.data);
   }
 }

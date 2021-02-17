@@ -4,11 +4,10 @@ import { withRouter } from "react-router-dom";
 import sidebarLinks from "./sidebarLinks";
 import styled from "styled-components";
 
-
 const { Sider } = Layout;
 const Sidebar = ({ history }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [activeKey, setActiveKey] = useState('1');
+  const [activeKey, setActiveKey] = useState("1");
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
@@ -19,7 +18,10 @@ const Sidebar = ({ history }) => {
     history.push(`${sidebarLinks[param.key - 1].path}`);
   };
   const WrappedSider = styled(Sider)`
-    .menu-item {
+    height: 100vh;
+    position: fixed;
+    left: 0;
+     .menu-item {
       display: flex;
       align-items: center;
     }
@@ -43,7 +45,7 @@ const Sidebar = ({ history }) => {
       <Menu
         theme="light"
         mode="inline"
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={["1"]}
         onSelect={onChange}
         selectedKeys={[activeKey]}
       >

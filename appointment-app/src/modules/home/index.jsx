@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import Header from "../layout/Header";
 import Sidebar from "../layout/Sidebar";
 import { Layout, message } from "antd";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard";
 import jwt from "jwt-decode";
 import storage from "../../storage";
 import TimeSlots from "../time-slots";
+import Content from "../layout/Content";
+import MyAccount from "../my-account/Index";
+import UserContext from "../../contexts/userContext";
+import Appointments from "../appointments";
 
 function Home({ match, history }) {
-  const { Content } = Layout;
+  // const { Content } = Layout;
+  const [userData, setUserData] = useState(storage.user.getItem() || {});
   useEffect(() => {
     try {
       const decodedToken = jwt(storage.authToken.getItem());
@@ -31,27 +36,49 @@ function Home({ match, history }) {
     }
   }, []);
 
+  function updateUserData(data) {
+    storage.user.setItem(data);
+    setUserData(data);
+  }
+
   return (
     <>
-      <Layout>
-        <Header />
-        <Layout
-          style={{ minHeight: "calc(100vh - 64px)", marginTop: "64px" }}
-          hasSider={true}
-        >
-          <Sidebar />
-          <Content style={{ padding: "24px 16px", margin: "16px auto" }}>
-            <Switch>
-              <Route exact path={`${match.url}`} component={Dashboard} />
-              <Route
+      <UserContext.Provider
+        value={{
+          userData: userData,
+          setUserData: updateUserData,
+        }}
+      >
+        <Layout color="#000">
+          <Header />
+          <Layout
+            style={{ minHeight: "calc(100vh - 64px)", marginTop: "64px" }}
+            hasSider={true}
+          >
+            <Sidebar />
+            <Content>
+              <Switch>
+                <Route exact path={`${match.url}`} component={Dashboard} />
+                <Route
+                  exact
+                  path={`${match.url}/my-account`}
+                  component={MyAccount}
+                />
+                <Route
                 exact
                 path={`${match.url}/time-slots`}
                 component={TimeSlots}
               />
-            </Switch>
-          </Content>
+               <Route
+                exact
+                path={`${match.url}/schedules`}
+                component={Appointments}
+              />
+              </Switch>
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
+      </UserContext.Provider>
     </>
   );
 }

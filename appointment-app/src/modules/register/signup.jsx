@@ -47,8 +47,8 @@ const Signup = () => {
       console.log(res);
     }).catch(error=>{
       if(error.response){
-        console.log(error.response.data);
-        message.error(error.response.data)
+        console.log(error.response.message);
+        message.error(error.response.message)
       }
     });
   };

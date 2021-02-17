@@ -1,4 +1,5 @@
 import DashboardIcon from "../../icons/js/dashboardIcon";
+import ScheduleIcon from "../../icons/js/scheduleIcon";
 
 const sidebarLinks = [
   {
@@ -12,6 +13,12 @@ const sidebarLinks = [
     name: "Time Slots",
     path: "/home/time-slots",
     icon: DashboardIcon,
+  },
+  {
+    key: "3",
+    name: "Schedules",
+    path: "/home/schedules",
+    icon: ScheduleIcon,
   },
 ];
 

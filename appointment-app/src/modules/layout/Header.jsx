@@ -1,21 +1,15 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useContext } from "react";
 import { Menu, Dropdown, Typography, Layout } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Link, withRouter } from "react-router-dom";
 import ProfileAvatar from "../../components/ProfileAvatar";
 import storage from "../../storage";
+import UserContext from "../../contexts/userContext";
 
-const Header = ({ history, newNotificationCount, userData }) => {
+const Header = ({ history, newNotificationCount }) => {
   const { Header } = Layout;
-  const Wrapper = styled(Header)`
-      width: 100%;
-      padding: 0px;
-      position: fixed;
-      zindex: 1;
-      display: flex;
-      justify-content: flex-end;
-  `;
+
+  const { userData } = useContext(UserContext);
 
   const logout = async () => {
     storage.authToken.clear();
@@ -32,36 +26,44 @@ const Header = ({ history, newNotificationCount, userData }) => {
     </Menu>
   );
   return (
-    // <Wrapper>
-      <Header className="header" style={{
+    <Header
+      className="header"
+      style={{
         width: "100%",
         padding: "0px",
         position: "fixed",
-        zIndex: '1',
+        zIndex: "1",
         display: "flex",
-        justifyContent: "flex-end"
-        }}>
-        <div className="right-components">
-          <Dropdown
-            className="dropdown"
-            overlay={menu}
-            placement="bottomLeft"
-            trigger={["click"]}
-          >
-            <div>
-              <ProfileAvatar
-                // url={userData.profilePic}
-                size="medium"
-                style={{ marginRight: "16px" }}
-                icon={<UserOutlined />}
-              />
-              <Typography.Text className="styled-text">
-                {userData && userData.hospital}
-              </Typography.Text>
-            </div>
-          </Dropdown>
-        </div>
-      </Header>
+        justifyContent: "flex-end",
+        backgroundColor: "#fff",
+        border: "1px solid #e4e4e4",
+      }}
+    >
+      <div className="right-components">
+        <Dropdown
+          className="dropdown"
+          overlay={menu}
+          placement="bottomLeft"
+          trigger={["click"]}
+        >
+          <div>
+            <ProfileAvatar
+              url={userData.profilePic}
+              size="large"
+              style={{ marginRight: "16px" }}
+              icon={<UserOutlined />}
+            />
+            <Typography.Text
+              type="primary"
+              strong={true}
+              style={{ marginRight: "16px" }}
+            >
+              {userData && userData.firstName}
+            </Typography.Text>
+          </div>
+        </Dropdown>
+      </div>
+    </Header>
   );
 };
 export default withRouter(Header);
