@@ -31,7 +31,7 @@ class ApiCalls {
   static updateProfilePicture(model) {
     return axiosInterceptor({
       url: "/user/profile-pic",
-      method: "PATCH",
+      method: "POST",
       headers: {
         "Content-Type": "multipart/form-data",
       },
