@@ -1,15 +1,18 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import styled from "styled-components";
 import { Row, Col } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Login from "./login.jsx";
 import Signup from "./signup.jsx";
+import BgImage from "../../icons/images/background.svg";
 
 const Register = ({ match }) => {
   const Wrapper = styled.div`
     background: #f8fafb;
-    background-image: url();
-    background-position: right;
+    background-image: url(${BgImage});
+    background-color:rgba(0,0,0, 0.1)
+    background-position: left ;
     background-repeat: no-repeat;
     background-position: 100%;
     overflow-x: hidden;

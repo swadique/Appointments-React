@@ -1,78 +1,69 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  TimePicker,
-  Switch,
-  Button,
-  Col,
-  Row,
-  message,
-  InputNumber,
-  Typography,
-} from "antd";
+import { Table, Button, Col, Row, message, Typography } from "antd";
 import styled from "styled-components";
 import ApiCalls from "../../apis/ApiCalls";
 import moment from "moment";
 import ProfileAvatar from "../../components/ProfileAvatar";
 
+const Wrapper = styled.div`
+  @media (min-width: 700px) {
+    padding: 24px;
+  }
+`;
+
 function Schedules() {
-  const Wrapper = styled.div`
-    @media (min-width: 700px) {
-      padding: 24px;
-    }
-  `;
-  const [isAllSlotsActive, setIsAllSlotsActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false);
   const [appointments, setAppointments] = useState([]);
 
-  const data = [
-    {
-      _id: {
-        $oid: "602aaa9541be316efcd96779",
-      },
-      status: "pending",
-      buyer: {
-        $oid: "602963563c147887182e803e",
-      },
-      seller: {
-        $oid: "602963223c147887182e8036",
-      },
-      startTime: "10:00",
-      endTime: "11:00",
-      appointmentDate: {
-        $date: "2021-02-14T17:52:22.085Z",
-      },
-      duration: "60",
-    },
-    {
-      _id: {
-        $oid: "602ab5043393dd76824c361b",
-      },
-      status: "accepted",
-      buyer: {
-        firstName: "sdsS",
-        lastName: "Sdsds",
-      },
-      seller: {
-        $oid: "602963223c147887182e8036",
-      },
-      startTime: "10:00",
-      endTime: "11:00",
-      appointmentDate: {
-        $date: "2021-02-15T13:52:23.023Z",
-      },
-      duration: "60",
-    },
-  ];
   useEffect(() => {
-    const params = {};
-    ApiCalls.getAppointments(params).then((res) => {
-      setAppointments(res);
-    });
+    fetchAppointments();
   }, []);
 
-  const StatusButtons = (status) => {
+  function fetchAppointments() {
+    const params = {};
+    setLoading(true);
+    ApiCalls.getAppointments(params)
+      .then((res) => {
+        setLoading(false);
+        setAppointments(res);
+      })
+      .catch((error) => {
+        if (error.response) {
+          message.error(error.response.data);
+        } else {
+          message.error("Server not responding");
+        }
+      });
+  }
+
+  function handleAccept(appointmentId) {
+    ApiCalls.acceptAppointment({ appointmentId })
+      .then(() => {
+        fetchAppointments();
+      })
+      .catch((error) => {
+        if (error.response) {
+          message.error(error.response.data);
+        } else {
+          message.error("Server not responding");
+        }
+      });
+  }
+  function handleReject(appointmentId) {
+    ApiCalls.rejectAppointment({ appointmentId })
+      .then(() => {
+        fetchAppointments();
+      })
+      .catch((error) => {
+        if (error.response) {
+          message.error(error.response.data);
+        } else {
+          message.error("Server not responding");
+        }
+      });
+  }
+
+  const StatusButtons = (status, record) => {
     return (
       <>
         {
@@ -80,10 +71,20 @@ function Schedules() {
             pending: (
               <Row gutter={8} justify="center">
                 <Col>
-                  <Button type="default">Reject</Button>
+                  <Button
+                    type="default"
+                    onClick={() => handleReject(record._id)}
+                  >
+                    Reject
+                  </Button>
                 </Col>
                 <Col>
-                  <Button type="primary">Accept</Button>
+                  <Button
+                    type="primary"
+                    onClick={() => handleAccept(record._id)}
+                  >
+                    Accept
+                  </Button>
                 </Col>
               </Row>
             ),
@@ -101,6 +102,7 @@ function Schedules() {
         dataSource={appointments}
         loading={loading}
         tableLayout="fixed"
+        pagination={false}
         title={() => (
           <Typography.Title level={3} type="secondary">
             Appointments
@@ -111,7 +113,7 @@ function Schedules() {
           title={<Typography.Title level={5}>Buyer</Typography.Title>}
           dataIndex="buyer"
           align="left"
-          render={(buyer, record, index) => (
+          render={(buyer) => (
             <Row gutter={8}>
               <Col>
                 <ProfileAvatar url={buyer.profilePic} />
@@ -128,8 +130,11 @@ function Schedules() {
           title={<Typography.Title level={5}>Date</Typography.Title>}
           dataIndex="appointmentDate"
           align="center"
-          render={(item, record) => (
-            <Typography.Text> {moment(item).format("D-MMM-yyy")}</Typography.Text>
+          render={(item) => (
+            <Typography.Text>
+              {" "}
+              {moment(item).format("D-MMM-yyy")}
+            </Typography.Text>
           )}
         />
         <Table.Column
@@ -145,7 +150,7 @@ function Schedules() {
         <Table.Column
           dataIndex="status"
           align="center"
-          render={(status, record) => StatusButtons(status)}
+          render={(status, record) => StatusButtons(status, record)}
         />
       </Table>
     </Wrapper>

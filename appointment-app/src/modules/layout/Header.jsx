@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext } from "react";
 import { Menu, Dropdown, Typography, Layout } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -5,8 +6,10 @@ import { Link, withRouter } from "react-router-dom";
 import ProfileAvatar from "../../components/ProfileAvatar";
 import storage from "../../storage";
 import UserContext from "../../contexts/userContext";
+import Logo from "../../icons/js/logo";
+// import Logo from "../../icons/images/react.svg";
 
-const Header = ({ history, newNotificationCount }) => {
+const Header = ({ history }) => {
   const { Header } = Layout;
 
   const { userData } = useContext(UserContext);
@@ -34,11 +37,14 @@ const Header = ({ history, newNotificationCount }) => {
         position: "fixed",
         zIndex: "1",
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent: "space-between",
         backgroundColor: "#fff",
         border: "1px solid #e4e4e4",
       }}
     >
+      <div style={{ marginLeft: 24,display:'flex',alignItems:'center' }}>
+        <Logo />
+      </div>
       <div className="right-components">
         <Dropdown
           className="dropdown"

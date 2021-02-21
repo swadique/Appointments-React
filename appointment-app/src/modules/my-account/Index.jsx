@@ -17,8 +17,8 @@ import UserContext from "../../contexts/userContext";
 import ProfileAvatar from "../../components/ProfileAvatar";
 import { UploadOutlined } from "@ant-design/icons";
 
-const MyAccount = (props) => {
-  const [loading, setLoading] = useState(true);
+const MyAccount = () => {
+  const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
 
@@ -40,7 +40,7 @@ const MyAccount = (props) => {
     formData.append("profilePic", file);
     setUploadLoading(true);
     ApiCalls.updateProfilePicture(formData)
-      .then((res) => {
+      .then(() => {
         message.success("Profile picture updated");
         setUploadLoading(false);
         getProfile();
@@ -94,7 +94,14 @@ const MyAccount = (props) => {
 
   return (
     <Wrapper>
-      <Card title={<Typography.Title level={3} type="secondary">My Account</Typography.Title>}>
+      <Card
+        loading={loading}
+        title={
+          <Typography.Title level={3} type="secondary">
+            My Account
+          </Typography.Title>
+        }
+      >
         <Row gutter={16} align="middle" className="title" justify="center">
           <Col>
             <ProfileAvatar
@@ -105,13 +112,13 @@ const MyAccount = (props) => {
           </Col>
           <Col>
             <div>
-                <Typography.Title level={5} strong={true}>{`${
-                  userData.firstName
-                } ${
-                  userData.lastName ? userData.lastName : ""
-                }`}</Typography.Title>
-         
-                <Typography.Text level={5}>{userData.email}</Typography.Text>
+              <Typography.Title level={5} strong={true}>{`${
+                userData.firstName
+              } ${
+                userData.lastName ? userData.lastName : ""
+              }`}</Typography.Title>
+
+              <Typography.Text level={5}>{userData.email}</Typography.Text>
             </div>
 
             <Upload
@@ -119,7 +126,12 @@ const MyAccount = (props) => {
               showUploadList={false}
               beforeUpload={updateProfilePicture}
             >
-              <Button type="default" shape="round" icon={<UploadOutlined />}>
+              <Button
+                type="default"
+                shape="round"
+                icon={<UploadOutlined />}
+                loading={uploadLoading}
+              >
                 Upload
               </Button>
             </Upload>

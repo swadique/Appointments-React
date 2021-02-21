@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, Row, Col, message } from "antd";
+import { Form, Input, Button, Checkbox, Row, Col, message, Card } from "antd";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import ApiCalls from "../../apis/ApiCalls";
@@ -37,181 +37,190 @@ const Signup = () => {
     .text-bold {
       font-weight: bold;
     }
+    .card-style {
+      border-radius: 16px;
+      padding: 16px 16px;
+    }
   `;
 
   const onFinish = (formValues) => {
+    // eslint-disable-next-line no-unused-vars
     const { confirm, acceptCheckbox, ...rest } = formValues;
     const payload = { ...rest, userType: "seller" };
-    ApiCalls.signup(payload).then((res) => {
-      message.success(res)
-      console.log(res);
-    }).catch(error=>{
-      if(error.response){
-        console.log(error.response.message);
-        message.error(error.response.message)
-      }
-    });
+    ApiCalls.signup(payload)
+      .then((res) => {
+        message.success(res);
+        console.log(res);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.message);
+          message.error(error.response.message);
+        }
+      });
   };
 
   return (
     <Wrapper>
-      <Row justify="center">
-        <Form
-          layout="vertical"
-          form={form}
-          initialValues={{
-            layout: "vertical",
-          }}
-          onFinish={onFinish}
-        >
-          <Row>
-            <Col span={12}>
-              <Form.Item
-                name="firstName"
-                rules={[
-                  {
-                    required: true,
-                    message: "First Name required",
-                  },
-                ]}
-              >
-                <Input placeholder="First Name" className="top-left-radius" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="lastName">
-                <Input placeholder="Last Name" className="top-right-radius" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col span={24}>
-              <Form.Item
-                name="email"
-                type="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Email is required",
-                  },
-                  {
-                    type: "email",
-                  },
-                ]}
-              >
-                <Input type="email" placeholder="Email" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <Form.Item
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Password is required",
-                  },
-                  {
-                    validator: (_, value) =>
-                      value !== undefined
-                        ? value.length !== 0
-                          ? value.length >= 8
-                            ? Promise.resolve()
-                            : Promise.reject(
-                                "Password should contain minimum 8 letters"
-                              )
-                          : Promise.resolve()
-                        : Promise.resolve(),
-                  },
-                ]}
-              >
-                <Input.Password
-                  type="password"
-                  placeholder="Password"
-                  className="input-password"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col span={24}>
-              <Form.Item
-                dependencies={["password"]}
-                name="confirm"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Confirm Password is required",
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(rule, value) {
-                      if (!value || getFieldValue("password") === value) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        "The two passwords that you entered do not match!"
-                      );
+      <Card className="card-style" hoverable={true}>
+        <Row justify="center">
+          <Form
+            layout="vertical"
+            form={form}
+            initialValues={{
+              layout: "vertical",
+            }}
+            onFinish={onFinish}
+          >
+            <Row>
+              <Col span={12}>
+                <Form.Item
+                  name="firstName"
+                  rules={[
+                    {
+                      required: true,
+                      message: "First Name required",
                     },
-                  }),
-                ]}
-              >
-                <Input.Password
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input-password bottom-left-radius bottom-right-radius"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify="center" align="center">
-            <Col span={24}>
-              <Form.Item
-                name="acceptCheckbox"
-                valuePropName="checked"
-                rules={[
-                  {
-                    validator: (_, value) =>
-                      value
-                        ? Promise.resolve()
-                        : Promise.reject("Should accept agreement"),
-                  },
-                ]}
-              >
-                <Checkbox style={{ fontSize: "12px", marginTop: "12px" }}>
-                  By checking this box,you agree Services & License Agreement
-                </Checkbox>
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify="center" className="margin-top-12">
-            <Col span={24}>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  block={true}
-                  htmlType="submit"
-                  shape="round"
-                  size="middle"
+                  ]}
                 >
-                  Sign Up
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify="center" className="margin-top-12">
-            Have an Account ?
-            <NavLink to="/register/login" className="text-bold">
-              &nbsp;Login
-            </NavLink>
-          </Row>
-        </Form>
-      </Row>
+                  <Input placeholder="First Name" className="top-left-radius" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item name="lastName">
+                  <Input placeholder="Last Name" className="top-right-radius" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={24}>
+                <Form.Item
+                  name="email"
+                  type="email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Email is required",
+                    },
+                    {
+                      type: "email",
+                    },
+                  ]}
+                >
+                  <Input type="email" placeholder="Email" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Form.Item
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Password is required",
+                    },
+                    {
+                      validator: (_, value) =>
+                        value !== undefined
+                          ? value.length !== 0
+                            ? value.length >= 8
+                              ? Promise.resolve()
+                              : Promise.reject(
+                                  "Password should contain minimum 8 letters"
+                                )
+                            : Promise.resolve()
+                          : Promise.resolve(),
+                    },
+                  ]}
+                >
+                  <Input.Password
+                    type="password"
+                    placeholder="Password"
+                    className="input-password"
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={24}>
+                <Form.Item
+                  dependencies={["password"]}
+                  name="confirm"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Confirm Password is required",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(rule, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          "The two passwords that you entered do not match!"
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password
+                    type="password"
+                    placeholder="Confirm Password"
+                    className="input-password bottom-left-radius bottom-right-radius"
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row justify="center" align="center">
+              <Col span={24}>
+                <Form.Item
+                  name="acceptCheckbox"
+                  valuePropName="checked"
+                  rules={[
+                    {
+                      validator: (_, value) =>
+                        value
+                          ? Promise.resolve()
+                          : Promise.reject("Should accept agreement"),
+                    },
+                  ]}
+                >
+                  <Checkbox style={{ fontSize: "12px", marginTop: "12px" }}>
+                    By checking this box,you agree Services & License Agreement
+                  </Checkbox>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row justify="center" className="margin-top-12">
+              <Col span={24}>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    block={true}
+                    htmlType="submit"
+                    shape="round"
+                    size="middle"
+                  >
+                    Sign Up
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify="center" className="margin-top-12">
+              Have an Account ?
+              <NavLink to="/register/login" className="text-bold">
+                &nbsp;Login
+              </NavLink>
+            </Row>
+          </Form>
+        </Row>
+      </Card>
     </Wrapper>
   );
 };

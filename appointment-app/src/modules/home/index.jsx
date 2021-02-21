@@ -1,9 +1,9 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import Header from "../layout/Header";
 import Sidebar from "../layout/Sidebar";
 import { Layout, message } from "antd";
-import { Route, Switch } from "react-router-dom";
-import Dashboard from "../dashboard";
+import { Redirect, Route, Switch } from "react-router-dom";
 import jwt from "jwt-decode";
 import storage from "../../storage";
 import TimeSlots from "../time-slots";
@@ -13,7 +13,6 @@ import UserContext from "../../contexts/userContext";
 import Appointments from "../appointments";
 
 function Home({ match, history }) {
-  // const { Content } = Layout;
   const [userData, setUserData] = useState(storage.user.getItem() || {});
   useEffect(() => {
     try {
@@ -58,22 +57,22 @@ function Home({ match, history }) {
             <Sidebar />
             <Content>
               <Switch>
-                <Route exact path={`${match.url}`} component={Dashboard} />
                 <Route
                   exact
                   path={`${match.url}/my-account`}
                   component={MyAccount}
                 />
                 <Route
-                exact
-                path={`${match.url}/time-slots`}
-                component={TimeSlots}
-              />
-               <Route
-                exact
-                path={`${match.url}/schedules`}
-                component={Appointments}
-              />
+                  exact
+                  path={`${match.url}/time-slots`}
+                  component={TimeSlots}
+                />
+                <Route
+                  exact
+                  path={`${match.url}/schedules`}
+                  component={Appointments}
+                />
+                <Redirect to={`${match.url}/time-slots`} />
               </Switch>
             </Content>
           </Layout>

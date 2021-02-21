@@ -139,7 +139,7 @@ function TimeSlots() {
     <Wrapper>
       <Table
         dataSource={timeSlots}
-        pagination={{ position: ["none", "none"] }}
+        pagination={false}
         loading={loading}
         tableLayout="fixed"
         title={() => (
@@ -181,7 +181,7 @@ function TimeSlots() {
           title="Interval"
           dataIndex="timeslot"
           align="center"
-          render={(item, record, index) => (
+          render={(item, record) => (
             <RangePicker
               showTime={{ format: "HH:mm" }}
               format="HH:mm"

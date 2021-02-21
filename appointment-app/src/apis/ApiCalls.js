@@ -52,5 +52,19 @@ class ApiCalls {
       params: params,
     }).then((response) => response.data);
   }
+  static acceptAppointment({ appointmentId }) {
+    return axiosInterceptor({
+      url: "/appointment/accept",
+      method: "POST",
+      data: {appointmentId},
+    }).then((response) => response.data);
+  }
+  static rejectAppointment({ appointmentId }) {
+    return axiosInterceptor({
+      url: "/appointment/reject",
+      method: "POST",
+      data: {appointmentId},
+    }).then((response) => response.data);
+  }
 }
 export default ApiCalls;

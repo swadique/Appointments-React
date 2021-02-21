@@ -1,5 +1,6 @@
 import React from "react";
 
+// eslint-disable-next-line react/prop-types
 function DashboardIcon({ height = "512", width = "512", active,className }) {
   return (
     <svg
