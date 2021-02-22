@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import React from "react";
-import { Layout, Col } from "antd";
+import { Layout } from "antd";
 import styled from "styled-components";
 
-const Content = (props) => {
+const Content = ({children}) => {
   const { Content } = Layout;
 
   const WrappedContent = styled(Content)`
@@ -13,6 +14,6 @@ const Content = (props) => {
     }
   `;
 
-  return <WrappedContent>{props.children}</WrappedContent>;
+  return <WrappedContent>{children}</WrappedContent>;
 };
 export default Content;
