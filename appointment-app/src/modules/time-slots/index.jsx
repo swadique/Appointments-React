@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Table,
   TimePicker,
@@ -8,13 +8,14 @@ import {
   Row,
   message,
   InputNumber,
-  Typography
+  Typography,
 } from "antd";
 import days from "../../constants/days";
 import styled from "styled-components";
 import ApiCalls from "../../apis/ApiCalls";
 import moment from "moment";
 import useDebounce from "../../utils/useDebounce";
+import UserContext from "../../contexts/userContext";
 const { RangePicker } = TimePicker;
 
 function TimeSlots() {
@@ -27,6 +28,7 @@ function TimeSlots() {
   const [isAllSlotsActive, setIsAllSlotsActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const { userData } = useContext(UserContext);
 
   function timeHandler(e, record) {
     try {
@@ -119,6 +121,12 @@ function TimeSlots() {
         setButtonLoading(false);
       });
   }
+  useEffect(() => {
+    if (userData.timeSlots) {
+      setTimeSlots(userData.timeSlots);
+      setIsAllSlotsActive(userData.isAllSlotsActive);
+    }
+  }, [userData]);
   useEffect(() => {
     setLoading(true);
     ApiCalls.getUserProfile()
